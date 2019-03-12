@@ -1,0 +1,22 @@
+image: docker:latest
+
+stages:
+  - build-docker
+
+build-docker:
+  image: docker:latest
+  stage: build-docker
+  tags:
+    - docker
+  only:
+    - master
+    - dev-master
+    - dev-docker
+  variables:
+    IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+  before_script:
+    - docker info
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+  script:
+    - docker build -t $IMAGE_TAG .
+    - docker push $IMAGE_TAG
