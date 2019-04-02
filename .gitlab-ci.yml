@@ -20,3 +20,8 @@ build-docker:
   script:
     - docker build -t $IMAGE_TAG .
     - docker push $IMAGE_TAG
+    - |
+      if [ "$CI_COMMIT_REF_NAME" == "master" ]; then
+        docker tag "$IMAGE_TAG" "${CI_REGISTRY_IMAGE}:latest"
+        docker push "${CI_REGISTRY_IMAGE}:latest"
+      fi
