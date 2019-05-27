@@ -1,4 +1,4 @@
-FROM alpine:3.8
+FROM alpine:3.9
 LABEL Description="Deploy an application using the Balena CLI."
 RUN apk update && apk add --no-cache --virtual .build-deps \
 	libstdc++ \
