@@ -55,19 +55,7 @@ build_docker:dockerhub:
     - docker build -t $IMAGE_TAG .
     - docker push $IMAGE_TAG
 
-build_docker:dockerhub:armv6:
-  extends: .build_docker
-  tags:
-    - armv6
-    - shell
-  only:
-    - master
-    - dev-master
-    - dev-docker
-  variables:
-    IMAGE_TAG: samibourouis/balena-cli:armv6
-
-build_docker:dockerhub:armv7:
+build_docker:dockerhub:armhf:
   extends: .build_docker
   tags:
     - armv7
@@ -77,4 +65,4 @@ build_docker:dockerhub:armv7:
     - dev-master
     - dev-docker
   variables:
-    IMAGE_TAG: samibourouis/balena-cli:armv7
+    IMAGE_TAG: samibourouis/balena-cli:armhf
