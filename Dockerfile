@@ -14,7 +14,6 @@ RUN apk update && apk add --no-cache --virtual .build-deps \
 	python3 \
 	nodejs \
 	nodejs-npm \
-	yarn \
 	git \
 	openssh \
 	bash
