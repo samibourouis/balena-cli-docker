@@ -53,7 +53,8 @@ build_docker:dockerhub:
     - docker login -u ${DOCKER_HUB_USERNAME} -p ${DOCKER_HUB_PASSWORD}
   script:
     - docker build -t $IMAGE_TAG .
-    - docker push $IMAGE_TAG
+    - BALENA_CLI_VERSION=`docker run -i $IMAGE_TAG balena version`
+    - docker push $IMAGE_TAG-BALENA_CLI_VERSION
 
 build_docker:dockerhub:armhf:
   extends: .build_docker
