@@ -54,9 +54,18 @@ build_docker:dockerhub:
       fi
 
 # Build docker
-.build_docker:
+build_docker:dockerhub:armhf:
   image: docker:latest
   stage: build-docker
+  tags:
+    - armv7
+    - shell
+  only:
+    - master
+    - dev-master
+    - dev-docker
+  variables:
+    IMAGE_TAG: samibourouis/balena-cli:armhf
   before_script:
     - docker info
     - docker login -u ${DOCKER_HUB_USERNAME} -p ${DOCKER_HUB_PASSWORD}
@@ -70,15 +79,3 @@ build_docker:dockerhub:
         docker tag "$IMAGE_TAG $IMAGE_TAG-latest"
         docker push "$IMAGE_TAG-latest"
       fi
-
-build_docker:dockerhub:armhf:
-  extends: .build_docker
-  tags:
-    - armv7
-    - shell
-  only:
-    - master
-    - dev-master
-    - dev-docker
-  variables:
-    IMAGE_TAG: samibourouis/balena-cli:armhf
