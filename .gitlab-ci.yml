@@ -38,7 +38,7 @@ build_docker:dockerhub:
     - dev-master
     - dev-docker
   variables:
-    IMAGE_TAG: samibourouis/balena-cli:latest
+    IMAGE_TAG: samibourouis/balena-cli
   before_script:
     - docker info
     - docker login -u ${DOCKER_HUB_USERNAME} -p ${DOCKER_HUB_PASSWORD}
