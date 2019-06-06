@@ -3,7 +3,7 @@ image: docker:latest
 stages:
   - build-docker
 
-.build_docker:gitlab:
+build_docker:gitlab:
   image: docker:latest
   stage: build-docker
   tags:
@@ -19,7 +19,7 @@ stages:
     - docker info
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
   script:
-    - docker build -t $IMAGE_TAG .
+    - docker build --no-cache -t $IMAGE_TAG .
     - BALENA_CLI_VERSION=`docker run -i $IMAGE_TAG balena version`
     - docker tag $IMAGE_TAG $IMAGE_TAG-$BALENA_CLI_VERSION
     - docker push $IMAGE_TAG-$BALENA_CLI_VERSION
@@ -45,7 +45,7 @@ build_docker:dockerhub:
     - docker info
     - docker login -u ${DOCKER_HUB_USERNAME} -p ${DOCKER_HUB_PASSWORD}
   script:
-    - docker build -t $IMAGE_TAG .
+    - docker build --no-cache -t $IMAGE_TAG .
     - BALENA_CLI_VERSION=`docker run -i $IMAGE_TAG balena version`
     - docker tag $IMAGE_TAG $IMAGE_TAG:$BALENA_CLI_VERSION
     - docker push $IMAGE_TAG:$BALENA_CLI_VERSION
@@ -73,7 +73,7 @@ build_docker:dockerhub:armhf:
     - docker info
     - docker login -u ${DOCKER_HUB_USERNAME} -p ${DOCKER_HUB_PASSWORD}
   script:
-    - docker build -t $IMAGE_TAG .
+    - docker build --no-cache -t $IMAGE_TAG .
     - BALENA_CLI_VERSION=`docker run -i $IMAGE_TAG balena version`
     - docker tag $IMAGE_TAG $IMAGE_TAG-$BALENA_CLI_VERSION
     - docker push $IMAGE_TAG-$BALENA_CLI_VERSION
