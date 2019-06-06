@@ -12,6 +12,7 @@ stages:
     - master
     - dev-master
     - dev-docker
+  cache: {}
   variables:
     IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   before_script:
@@ -37,6 +38,7 @@ build_docker:dockerhub:
     - master
     - dev-master
     - dev-docker
+  cache: {}
   variables:
     IMAGE_TAG: samibourouis/balena-cli
   before_script:
@@ -64,6 +66,7 @@ build_docker:dockerhub:armhf:
     - master
     - dev-master
     - dev-docker
+  cache: {}
   variables:
     IMAGE_TAG: samibourouis/balena-cli:armhf
   before_script:
