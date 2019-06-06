@@ -3,7 +3,7 @@ image: docker:latest
 stages:
   - build-docker
 
-build_docker:gitlab:
+.build_docker:gitlab:
   image: docker:latest
   stage: build-docker
   tags:
@@ -12,6 +12,7 @@ build_docker:gitlab:
     - master
     - dev-master
     - dev-docker
+  cache: {}
   variables:
     IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   before_script:
@@ -19,7 +20,9 @@ build_docker:gitlab:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
   script:
     - docker build -t $IMAGE_TAG .
-    - docker push $IMAGE_TAG
+    - BALENA_CLI_VERSION=`docker run -i $IMAGE_TAG balena version`
+    - docker tag $IMAGE_TAG $IMAGE_TAG-$BALENA_CLI_VERSION
+    - docker push $IMAGE_TAG-$BALENA_CLI_VERSION
     - |
       if [ "$CI_COMMIT_REF_NAME" == "master" ]; then
         docker tag "$IMAGE_TAG" "${CI_REGISTRY_IMAGE}:latest"
@@ -35,28 +38,27 @@ build_docker:dockerhub:
     - master
     - dev-master
     - dev-docker
+  cache: {}
   variables:
-    IMAGE_TAG: samibourouis/balena-cli:latest
+    IMAGE_TAG: samibourouis/balena-cli
   before_script:
     - docker info
     - docker login -u ${DOCKER_HUB_USERNAME} -p ${DOCKER_HUB_PASSWORD}
   script:
     - docker build -t $IMAGE_TAG .
-    - docker push $IMAGE_TAG
+    - BALENA_CLI_VERSION=`docker run -i $IMAGE_TAG balena version`
+    - docker tag $IMAGE_TAG $IMAGE_TAG:$BALENA_CLI_VERSION
+    - docker push $IMAGE_TAG:$BALENA_CLI_VERSION
+    - |
+      if [ "$CI_COMMIT_REF_NAME" == "master" ]; then
+        docker tag "$IMAGE_TAG" "${CI_REGISTRY_IMAGE}:latest"
+        docker push "${CI_REGISTRY_IMAGE}:latest"
+      fi
 
 # Build docker
-.build_docker:
+build_docker:dockerhub:armhf:
   image: docker:latest
   stage: build-docker
-  before_script:
-    - docker info
-    - docker login -u ${DOCKER_HUB_USERNAME} -p ${DOCKER_HUB_PASSWORD}
-  script:
-    - docker build -t $IMAGE_TAG .
-    - docker push $IMAGE_TAG
-
-build_docker:dockerhub:armhf:
-  extends: .build_docker
   tags:
     - armv7
     - shell
@@ -64,5 +66,19 @@ build_docker:dockerhub:armhf:
     - master
     - dev-master
     - dev-docker
+  cache: {}
   variables:
     IMAGE_TAG: samibourouis/balena-cli:armhf
+  before_script:
+    - docker info
+    - docker login -u ${DOCKER_HUB_USERNAME} -p ${DOCKER_HUB_PASSWORD}
+  script:
+    - docker build -t $IMAGE_TAG .
+    - BALENA_CLI_VERSION=`docker run -i $IMAGE_TAG balena version`
+    - docker tag $IMAGE_TAG $IMAGE_TAG-$BALENA_CLI_VERSION
+    - docker push $IMAGE_TAG-$BALENA_CLI_VERSION
+    - |
+      if [ "$CI_COMMIT_REF_NAME" == "master" ]; then
+        docker tag "$IMAGE_TAG $IMAGE_TAG-latest"
+        docker push "$IMAGE_TAG-latest"
+      fi
