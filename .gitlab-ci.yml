@@ -19,7 +19,9 @@ build_docker:gitlab:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
   script:
     - docker build -t $IMAGE_TAG .
-    - docker push $IMAGE_TAG
+    - BALENA_CLI_VERSION=`docker run -i $IMAGE_TAG balena version`
+    - docker tag $IMAGE_TAG $IMAGE_TAG-$BALENA_CLI_VERSION
+    - docker push $IMAGE_TAG-$BALENA_CLI_VERSION
     - |
       if [ "$CI_COMMIT_REF_NAME" == "master" ]; then
         docker tag "$IMAGE_TAG" "${CI_REGISTRY_IMAGE}:latest"
@@ -42,7 +44,14 @@ build_docker:dockerhub:
     - docker login -u ${DOCKER_HUB_USERNAME} -p ${DOCKER_HUB_PASSWORD}
   script:
     - docker build -t $IMAGE_TAG .
-    - docker push $IMAGE_TAG
+    - BALENA_CLI_VERSION=`docker run -i $IMAGE_TAG balena version`
+    - docker tag $IMAGE_TAG $IMAGE_TAG-$BALENA_CLI_VERSION
+    - docker push $IMAGE_TAG-$BALENA_CLI_VERSION
+    - |
+      if [ "$CI_COMMIT_REF_NAME" == "master" ]; then
+        docker tag "$IMAGE_TAG" "${CI_REGISTRY_IMAGE}:latest"
+        docker push "${CI_REGISTRY_IMAGE}:latest"
+      fi
 
 # Build docker
 .build_docker:
@@ -56,6 +65,11 @@ build_docker:dockerhub:
     - BALENA_CLI_VERSION=`docker run -i $IMAGE_TAG balena version`
     - docker tag $IMAGE_TAG $IMAGE_TAG-$BALENA_CLI_VERSION
     - docker push $IMAGE_TAG-$BALENA_CLI_VERSION
+    - |
+      if [ "$CI_COMMIT_REF_NAME" == "master" ]; then
+        docker tag $IMAGE_TAG $IMAGE_TAG-latest
+        docker push "$IMAGE_TAG-latest"
+      fi
 
 build_docker:dockerhub:armhf:
   extends: .build_docker
