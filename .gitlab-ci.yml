@@ -3,7 +3,7 @@ image: docker:latest
 stages:
   - build-docker
 
-build_docker:gitlab:
+.build_docker:gitlab:
   image: docker:latest
   stage: build-docker
   tags:
