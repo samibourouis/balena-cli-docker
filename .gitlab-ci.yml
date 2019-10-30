@@ -2,6 +2,7 @@ image: docker:latest
 
 stages:
   - build-docker
+  - publish-git
 
 build_docker:gitlab:
   image: docker:latest
@@ -82,3 +83,22 @@ build_docker:dockerhub:armhf:
         docker tag "$IMAGE_TAG" "$IMAGE_TAG-latest"
         docker push "$IMAGE_TAG-latest"
       fi
+
+# Publish to Github
+github_mirror:
+  stage: publish-git
+  image:
+    name: alpine/git
+    entrypoint: [ "/bin/sh", "-c" ]
+  only:
+    - master
+    - dev-master
+  variables:
+    GIT_STRATEGY: clone
+    GIT_CHECKOUT: "false"
+  script: |
+    cd /tmp
+    git clone --mirror ${CI_REPOSITORY_URL} project
+    cd project
+    git remote add github https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/samibourouis/balena-cli-docker.git
+    git push --mirror github
