@@ -11,7 +11,7 @@ build_docker:gitlab:
     - docker
   only:
     - master
-    - dev-master
+#    - dev-master
     - dev-docker
   cache: {}
   variables:
@@ -37,7 +37,7 @@ build_docker:dockerhub:
     - docker
   only:
     - master
-    - dev-master
+#    - dev-master
     - dev-docker
   cache: {}
   variables:
@@ -65,7 +65,7 @@ build_docker:dockerhub:armhf:
     - shell
   only:
     - master
-    - dev-master
+#    - dev-master
     - dev-docker
   cache: {}
   variables:
@@ -92,7 +92,6 @@ github_mirror:
     entrypoint: [ "/bin/sh", "-c" ]
   only:
     - master
-    - dev-master
   variables:
     GIT_STRATEGY: clone
     GIT_CHECKOUT: "false"
