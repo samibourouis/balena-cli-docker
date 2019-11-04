@@ -1,4 +1,4 @@
-Daily Builds of Balena CLI docker image, intended to be used in CI/CD operations.
+Weekly Builds of Balena CLI docker image, intended to be used in CI/CD operations.
 
 Tags:
 
