@@ -11,8 +11,6 @@ build_docker:gitlab:
     - docker
   only:
     - master
-#    - dev-master
-    - dev-docker
   cache: {}
   variables:
     IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
@@ -37,8 +35,6 @@ build_docker:dockerhub:
     - docker
   only:
     - master
-#    - dev-master
-    - dev-docker
   cache: {}
   variables:
     IMAGE_TAG: samibourouis/balena-cli
@@ -65,8 +61,6 @@ build_docker:dockerhub:armhf:
     - shell
   only:
     - master
-#    - dev-master
-    - dev-docker
   cache: {}
   variables:
     IMAGE_TAG: samibourouis/balena-cli:armhf
