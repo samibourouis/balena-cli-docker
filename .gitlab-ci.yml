@@ -57,7 +57,7 @@ build_docker:dockerhub:armhf:
   image: docker:latest
   stage: build-docker
   tags:
-    - armv7
+    - armhf
     - shell
   only:
     - master
