@@ -4,7 +4,7 @@ Tags:
 
 - samibourouis/balena-cli:latest : amd64
 
-- samibourouis/balena-cli:armhf-latest  : armhf/armv7
+- samibourouis/balena-cli:armhf-latest  : armhf/armv7 [Discontinued]
 
 Versions information :
 - alpine:3.9
