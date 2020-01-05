@@ -4,7 +4,7 @@ stages:
   - build-docker
   - publish-git
 
-build_docker:gitlab:
+.build_docker:gitlab:
   image: docker:latest
   stage: build-docker
   tags:
