@@ -32,24 +32,31 @@ build_docker:dockerhub:
   image: docker:latest
   stage: build-docker
   tags:
-    - docker
+    - buildx
   only:
     - master
   cache: {}
   variables:
+    DOCKERFILE: Dockerfile
     IMAGE_TAG: samibourouis/balena-cli
   before_script:
     - docker info
+    - docker buildx version
     - docker login -u ${DOCKER_HUB_USERNAME} -p ${DOCKER_HUB_PASSWORD}
   script:
-    - docker build --no-cache -t $IMAGE_TAG .
-    - BALENA_CLI_VERSION=`docker run -i $IMAGE_TAG balena version`
-    - docker tag $IMAGE_TAG $IMAGE_TAG:$BALENA_CLI_VERSION
-    - docker push $IMAGE_TAG:$BALENA_CLI_VERSION
+#    - docker build --no-cache -t ${IMAGE_TAG} .
+
+    - docker buildx use gitlab-runner-builder
+    - docker buildx inspect --bootstrap
+    - docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6 -t ${IMAGE_TAG} -f ${DOCKERFILE} ${DOCKER_BUILD_ARGS} .
+
+    - BALENA_CLI_VERSION=`docker run -i ${IMAGE_TAG} balena version`
+    - docker tag ${IMAGE_TAG} ${IMAGE_TAG}:$BALENA_CLI_VERSION
+    - docker push ${IMAGE_TAG}:$BALENA_CLI_VERSION
     - |
       if [ "$CI_COMMIT_REF_NAME" == "master" ]; then
-        docker tag "$IMAGE_TAG" "$IMAGE_TAG:latest"
-        docker push "$IMAGE_TAG:latest"
+        docker tag "${IMAGE_TAG}" "${IMAGE_TAG}:latest"
+        docker push "${IMAGE_TAG}:latest"
       fi
 
 # Build docker
