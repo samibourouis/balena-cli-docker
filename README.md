@@ -7,9 +7,6 @@ Tags:
 Architectures:
 
 - linux/amd64
-- linux/arm64
-- linux/arm/v7
-- linux/arm/v6
 
 Versions information :
 - alpine:3.9

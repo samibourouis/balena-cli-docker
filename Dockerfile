@@ -19,5 +19,5 @@ RUN apk update && apk add --no-cache --virtual .build-deps \
 	bash
 RUN npm install balena-cli -g --production --unsafe-perm
 WORKDIR /
-COPY / .
+# COPY / .
 CMD [ "node" ]
