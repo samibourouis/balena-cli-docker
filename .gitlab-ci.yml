@@ -4,6 +4,7 @@ stages:
   - build-docker
   - publish-git
 
+# Build Docker & deploy to Docker Hub
 build_docker:dockerhub:
   image: docker:latest
   stage: build-docker
@@ -22,7 +23,7 @@ build_docker:dockerhub:
   script:
     - docker buildx use gitlab-runner-builder
     - docker buildx inspect --bootstrap
-    - docker buildx build --no-cache --platform linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6 -t ${IMAGE_TAG}:latest -f ${DOCKERFILE} ${DOCKER_BUILD_ARGS} . --push
+    - docker buildx build --no-cache --platform linux/amd64,linux/arm64,linux/arm/v7 -t ${IMAGE_TAG}:latest -f ${DOCKERFILE} ${DOCKER_BUILD_ARGS} . --push
     - BALENA_CLI_VERSION=`docker run -i ${IMAGE_TAG}:latest balena version`
     - docker tag ${IMAGE_TAG}:latest ${IMAGE_TAG}:$BALENA_CLI_VERSION
     - docker push ${IMAGE_TAG}:$BALENA_CLI_VERSION
