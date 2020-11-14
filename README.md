@@ -2,9 +2,14 @@ Weekly Builds of Balena CLI docker image, intended to be used in CI/CD operation
 
 Tags:
 
-- samibourouis/balena-cli:latest : amd64
+- samibourouis/balena-cli:latest 
 
-- samibourouis/balena-cli:armhf-latest  : armhf/armv7 [Discontinued]
+Architectures:
+
+- linux/amd64
+- linux/arm64
+- linux/arm/v7
+- linux/arm/v6
 
 Versions information :
 - alpine:3.9

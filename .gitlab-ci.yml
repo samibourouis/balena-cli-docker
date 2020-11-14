@@ -48,7 +48,7 @@ build_docker:dockerhub:
 
     - docker buildx use gitlab-runner-builder
     - docker buildx inspect --bootstrap
-    - docker buildx build --platform linux/amd64,linux/arm64 -t ${IMAGE_TAG} -f ${DOCKERFILE} ${DOCKER_BUILD_ARGS} .
+    - docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v6,linux/arm/v7 -t ${IMAGE_TAG} -f ${DOCKERFILE} ${DOCKER_BUILD_ARGS} .
 
     - BALENA_CLI_VERSION=`docker run -i ${IMAGE_TAG} balena version`
     - docker tag ${IMAGE_TAG} ${IMAGE_TAG}:$BALENA_CLI_VERSION
