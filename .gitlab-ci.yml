@@ -23,13 +23,15 @@ build_docker:dockerhub:
     - docker buildx inspect --bootstrap
     - echo ${CI_BUILD_TOKEN} | docker login -u gitlab-ci-token --password-stdin ${CI_REGISTRY}
   script:
-    - docker buildx build --no-cache --platform linux/amd64 -t ${IMAGE_TAG} -f ${DOCKERFILE} ${DOCKER_BUILD_ARGS} . --push
+    - docker buildx build --no-cache --platform linux/amd64 -t ${IMAGE_TAG} -f ${DOCKERFILE} ${DOCKER_BUILD_ARGS} .
 
     - BALENA_CLI_VERSION=`docker run -i ${IMAGE_TAG} balena version`
     - echo $BALENA_CLI_VERSION
 
-    - docker tag ${IMAGE_TAG} ${IMAGE_TAG}:$BALENA_CLI_VERSION
-    - docker push ${IMAGE_TAG}:$BALENA_CLI_VERSION
+#    - docker push ${IMAGE_TAG}
+
+#    - docker tag ${IMAGE_TAG} ${IMAGE_TAG}:$BALENA_CLI_VERSION
+#    - docker push ${IMAGE_TAG}:$BALENA_CLI_VERSION
     
     # Push to docker hub
     - docker login -u ${DOCKER_HUB_USERNAME} -p ${DOCKER_HUB_PASSWORD}
