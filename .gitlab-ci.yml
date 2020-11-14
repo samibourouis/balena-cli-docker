@@ -21,6 +21,7 @@ build_docker:dockerhub:
     - docker buildx use gitlab-runner-builder
     - docker buildx inspect --bootstrap
     - echo ${CI_BUILD_TOKEN} | docker login -u gitlab-ci-token --password-stdin ${CI_REGISTRY}
+    - docker info
   script:
     - docker buildx build --no-cache --platform linux/amd64 -t ${IMAGE_TAG} -f ${DOCKERFILE} ${DOCKER_BUILD_ARGS} . --push
 
