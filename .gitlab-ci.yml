@@ -4,30 +4,6 @@ stages:
   - build-docker
   - publish-git
 
-.build_docker:gitlab:
-  image: docker:latest
-  stage: build-docker
-  tags:
-    - docker
-  only:
-    - master
-  cache: {}
-  variables:
-    IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
-  before_script:
-    - docker info
-    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
-  script:
-    - docker build --no-cache -t $IMAGE_TAG .
-    - BALENA_CLI_VERSION=`docker run -i $IMAGE_TAG balena version`
-    - docker tag $IMAGE_TAG $IMAGE_TAG-$BALENA_CLI_VERSION
-    - docker push $IMAGE_TAG-$BALENA_CLI_VERSION
-    - |
-      if [ "$CI_COMMIT_REF_NAME" == "master" ]; then
-        docker tag "$IMAGE_TAG" "${CI_REGISTRY_IMAGE}:latest"
-        docker push "${CI_REGISTRY_IMAGE}:latest"
-      fi
-
 build_docker:dockerhub:
   image: docker:latest
   stage: build-docker
@@ -44,40 +20,12 @@ build_docker:dockerhub:
     - docker buildx version
     - docker login -u ${DOCKER_HUB_USERNAME} -p ${DOCKER_HUB_PASSWORD}
   script:
-
     - docker buildx use gitlab-runner-builder
     - docker buildx inspect --bootstrap
     - docker buildx build --no-cache --platform linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6 -t ${IMAGE_TAG}:latest -f ${DOCKERFILE} ${DOCKER_BUILD_ARGS} . --push
-
     - BALENA_CLI_VERSION=`docker run -i ${IMAGE_TAG}:latest balena version`
     - docker tag ${IMAGE_TAG}:latest ${IMAGE_TAG}:$BALENA_CLI_VERSION
     - docker push ${IMAGE_TAG}:$BALENA_CLI_VERSION
-
-# Build docker
-.build_docker:dockerhub:armhf:
-  image: docker:latest
-  stage: build-docker
-  tags:
-    - armhf
-    - shell
-  only:
-    - master
-  cache: {}
-  variables:
-    IMAGE_TAG: samibourouis/balena-cli:armhf
-  before_script:
-    - docker info
-    - docker login -u ${DOCKER_HUB_USERNAME} -p ${DOCKER_HUB_PASSWORD}
-  script:
-    - docker build --no-cache -t $IMAGE_TAG .
-    - BALENA_CLI_VERSION=`docker run -i $IMAGE_TAG balena version`
-    - docker tag $IMAGE_TAG $IMAGE_TAG-$BALENA_CLI_VERSION
-    - docker push $IMAGE_TAG-$BALENA_CLI_VERSION
-    - |
-      if [ "$CI_COMMIT_REF_NAME" == "master" ]; then
-        docker tag "$IMAGE_TAG" "$IMAGE_TAG-latest"
-        docker push "$IMAGE_TAG-latest"
-      fi
 
 # Publish to Github
 github_mirror:
