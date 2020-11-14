@@ -1,4 +1,3 @@
-image: docker:latest
 
 stages:
   - build-docker
