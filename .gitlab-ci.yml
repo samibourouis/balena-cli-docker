@@ -14,14 +14,12 @@ build_docker:dockerhub:
   cache: {}
   variables:
     DOCKERFILE: Dockerfile
-    IMAGE_TAG: ${CI_REGISTRY_IMAGE}
     IMAGE_TAG_DOCKER_HUB: samibourouis/balena-cli
   before_script:
     - docker info
     - docker buildx version
     - docker buildx use gitlab-runner-builder
     - docker buildx inspect --bootstrap
-#    - echo ${CI_BUILD_TOKEN} | docker login -u gitlab-ci-token --password-stdin ${CI_REGISTRY}
     - docker login -u ${DOCKER_HUB_USERNAME} -p ${DOCKER_HUB_PASSWORD}
   script:
     - docker buildx build --no-cache --platform linux/amd64 -t ${IMAGE_TAG_DOCKER_HUB} -f ${DOCKERFILE} ${DOCKER_BUILD_ARGS} . --push
