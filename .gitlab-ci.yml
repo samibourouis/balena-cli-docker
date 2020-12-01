@@ -29,7 +29,7 @@ build_docker:dockerhub:
     - BALENA_CLI_VERSION=`docker run -i ${IMAGE_TAG_DOCKER_HUB} balena version`
     - echo $BALENA_CLI_VERSION
 
-    - docker tag ${IMAGE_TAG} ${IMAGE_TAG_DOCKER_HUB}:$BALENA_CLI_VERSION
+    - docker tag ${IMAGE_TAG_DOCKER_HUB} ${IMAGE_TAG_DOCKER_HUB}:$BALENA_CLI_VERSION
     - docker push ${IMAGE_TAG_DOCKER_HUB}:$BALENA_CLI_VERSION
 
 # Publish to Github
