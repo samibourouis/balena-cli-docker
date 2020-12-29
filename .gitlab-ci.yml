@@ -5,7 +5,6 @@ stages:
 
 # Build Docker & deploy to Docker Hub
 build_docker:dockerhub:
-  image: docker:latest
   stage: build-docker
   tags:
     - buildx
